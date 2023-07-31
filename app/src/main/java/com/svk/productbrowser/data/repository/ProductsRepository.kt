@@ -22,7 +22,7 @@ class ProductsRepository(
             if(productModels.isNotEmpty()){
                 ProductListState.Success(productModels)
             }else{
-                ProductListState.Error("No data")
+                ProductListState.Error("No data found")
             }
         }catch (e:Exception) {
             Log.w(TAG, "fetchPagedListData: ", e)

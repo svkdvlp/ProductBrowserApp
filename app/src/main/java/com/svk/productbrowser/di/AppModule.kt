@@ -1,8 +1,10 @@
 package com.svk.productbrowser.di
 
 import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.svk.productbrowser.data.remote.ProductsApi
 import com.svk.productbrowser.data.repository.ProductsRepository
+import com.svk.productbrowser.ui.productList.ProductsAdapter
 import com.svk.productbrowser.util.Constants
 import dagger.Module
 import dagger.Provides
@@ -29,7 +31,9 @@ object AppModule {
     @Provides
     @Singleton
     fun provideMoshi(): Moshi {
-        return Moshi.Builder().build()
+        return Moshi.Builder()
+            .add(KotlinJsonAdapterFactory())
+            .build()
     }
 
     @Provides
@@ -48,12 +52,17 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideProductsApi(httpClient: OkHttpClient):  ProductsApi {
+    fun provideProductsApi(httpClient: OkHttpClient, moshi:Moshi):  ProductsApi {
         return Retrofit.Builder()
             .baseUrl(Constants.BASE_URL)
-            .addConverterFactory(MoshiConverterFactory.create())
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
             .client(httpClient)
             .build()
             .create(ProductsApi::class.java)
+    }
+
+    @Provides
+    fun provideProductList(): ProductsAdapter {
+        return ProductsAdapter(arrayListOf())
     }
 }
