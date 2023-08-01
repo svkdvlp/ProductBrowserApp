@@ -13,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.svk.productbrowser.databinding.FragmentProductsListBinding
 import com.svk.productbrowser.domain.ProductListState
+import com.svk.productbrowser.ui.ProductsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -87,7 +88,6 @@ class ProductsListFragment : Fragment() {
     }
 
     private fun searchProducts() {
-        showMessageUi("Browse Products")
         binding.edtSearch.doAfterTextChanged {editable: Editable? ->
             viewModel.onTextChange(editable.toString())
         }

@@ -1,7 +1,11 @@
 package com.svk.productbrowser.di
 
+import android.content.Context
+import androidx.room.Room
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import com.svk.productbrowser.data.local.AppDatabase
+import com.svk.productbrowser.data.local.ProductsDao
 import com.svk.productbrowser.data.remote.ProductsApi
 import com.svk.productbrowser.data.repository.ProductsRepository
 import com.svk.productbrowser.ui.productList.ProductsAdapter
@@ -9,6 +13,7 @@ import com.svk.productbrowser.util.Constants
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -24,8 +29,24 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideProductsRepository(productsApi: ProductsApi): ProductsRepository {
-        return ProductsRepository(productsApi)
+    fun provideAppDatabase(@ApplicationContext appContext: Context): AppDatabase {
+        return Room.databaseBuilder(
+            appContext,
+            AppDatabase::class.java,
+            "products_db.sqlite"
+        ).build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideProductsDao(appDatabase: AppDatabase): ProductsDao {
+        return appDatabase.productsDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideProductsRepository(productsApi: ProductsApi, dao: ProductsDao): ProductsRepository {
+        return ProductsRepository(productsApi, dao)
     }
 
     @Provides

@@ -1,12 +1,10 @@
-package com.svk.productbrowser.ui.productList
+package com.svk.productbrowser.ui
 
-import android.text.Editable
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.svk.productbrowser.data.repository.ProductsRepository
+import com.svk.productbrowser.domain.ProductDetailState
 import com.svk.productbrowser.domain.ProductListState
-import com.svk.productbrowser.domain.ProductModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
@@ -37,7 +35,10 @@ class ProductsViewModel @Inject constructor(
     private val _isSearching = MutableStateFlow(false)
     val isSearching = _isSearching.asStateFlow()
 
-    private val _productModels = MutableStateFlow<List<ProductModel>>(emptyList())
+    private val _productDetail = MutableStateFlow<ProductDetailState>(ProductDetailState.Loading)
+    val productDetail = _productDetail.asStateFlow()
+
+    private val _productModels = MutableStateFlow<ProductListState>(ProductListState.Loading)
     @OptIn(FlowPreview::class)
     val productModels = searchText.debounce(1000L)
         .onEach { _isSearching.update {  true } }
@@ -58,5 +59,10 @@ class ProductsViewModel @Inject constructor(
 
     fun onTextChange(query: String) {
         _searchText.value = URLEncoder.encode(query, "UTF-8")
+    }
+
+    suspend fun getProductDetail(id: Int) = withContext(Dispatchers.IO) {
+        val result = productsRepository.getProductFromLocalDB(id)
+        _productDetail.update { result }
     }
 }
