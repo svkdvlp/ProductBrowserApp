@@ -5,6 +5,9 @@ import com.svk.productbrowser.util.Constants
 import retrofit2.http.GET
 import retrofit2.http.Query
 
+/**
+ * API interface for network calls
+ */
 interface ProductsApi {
 
     @GET(Constants.SEARCH_URL)

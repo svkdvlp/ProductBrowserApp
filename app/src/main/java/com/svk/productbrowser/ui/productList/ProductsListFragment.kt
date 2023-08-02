@@ -18,6 +18,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * ProductsListFragment : Ui for showing product list by input search
+ */
 @AndroidEntryPoint
 class ProductsListFragment : Fragment() {
     private var _binding: FragmentProductsListBinding? = null
@@ -32,6 +35,8 @@ class ProductsListFragment : Fragment() {
     ): View {
         _binding = FragmentProductsListBinding.inflate(inflater, container, false)
         val view = binding.root
+        _binding!!.lifecycleOwner = this
+        _binding!!.viewModel = viewModel
         val rvProducts = binding.rvProducts
         rvProducts.layoutManager = LinearLayoutManager(context)
         rvProducts.adapter = adapterProducts
@@ -48,43 +53,20 @@ class ProductsListFragment : Fragment() {
 
     private fun setupObservers() {
         lifecycleScope.launch {
-           viewModel.isSearching.collect{ isSearching->
-               if(isSearching){
-                   hideMessageUi()
-                   binding.pbLoading.visibility = View.VISIBLE
-               }else{
-                   binding.pbLoading.visibility = View.GONE
-               }
-           }
-       }
-
-        lifecycleScope.launch {
             viewModel.productModels.collect{ result ->
                 when(result){
                     is ProductListState.Loading ->{
                         adapterProducts?.clear()
-                        showMessageUi("Searching..")
                     }
                     is ProductListState.Success ->{
-                        hideMessageUi()
                         adapterProducts?.clearAndAddAll(result.products)
                     }
                     is ProductListState.Error ->{
                         adapterProducts?.clear()
-                        showMessageUi(result.error)
                     }
                 }
             }
         }
-    }
-
-    private fun showMessageUi(msg: String = "Loading") {
-        binding.tvMsg.text = msg
-        binding.tvMsg.visibility = View.VISIBLE
-    }
-
-    private fun hideMessageUi() {
-        binding.tvMsg.visibility = View.GONE
     }
 
     private fun searchProducts() {

@@ -1,5 +1,8 @@
 package com.svk.productbrowser.util
 
+/**
+ * Helper constants
+ */
 class Constants {
 
     companion object{

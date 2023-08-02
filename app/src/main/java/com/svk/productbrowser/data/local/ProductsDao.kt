@@ -6,6 +6,9 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
 
+/**
+ * DAO interface for local db operations
+ */
 @Dao
 interface ProductsDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
@@ -15,5 +18,5 @@ interface ProductsDao {
     fun getProduct(product_id:Int): ProductEntity?
 
     @Query("SELECT * FROM products_table WHERE title LIKE '%' || :query || '%'")
-    fun searchProducts(query:String): List<ProductEntity>
+    fun searchProducts(query:String): Flow<List<ProductEntity>>
 }

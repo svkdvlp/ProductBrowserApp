@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">ProductBrowser</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="enter_your_search">Enter your search</string>
+    <string name="browse_products">Browse Products</string>
+    <string name="no_data_found">No Data found</string>
+    <string name="local_search_gen_err">searchFromLocalDB Error</string>
+    <string name="local_get_product_gen_err">getProductFromLocalDB Error</string>
 </resources>

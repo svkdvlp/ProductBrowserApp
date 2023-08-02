@@ -22,7 +22,9 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import java.time.Duration
 import javax.inject.Singleton
 
-
+/**
+ * Application DI provider
+ */
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
@@ -45,8 +47,9 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideProductsRepository(productsApi: ProductsApi, dao: ProductsDao): ProductsRepository {
-        return ProductsRepository(productsApi, dao)
+    fun provideProductsRepository(productsApi: ProductsApi, dao: ProductsDao,
+                                  resourcesProvider: ResourcesProvider): ProductsRepository {
+        return ProductsRepository(productsApi, dao, resourcesProvider)
     }
 
     @Provides

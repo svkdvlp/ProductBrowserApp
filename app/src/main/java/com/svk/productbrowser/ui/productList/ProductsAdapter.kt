@@ -7,6 +7,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.svk.productbrowser.databinding.LayoutProductRowBinding
 import com.svk.productbrowser.domain.ProductModel
 
+/**
+ * ProductsAdapter : Product list UI helper
+ */
 class ProductsAdapter(
     private val products: ArrayList<ProductModel>
 ):RecyclerView.Adapter<ProductsAdapter.ProductViewHolder>() {
